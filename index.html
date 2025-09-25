@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <link rel="icon" type="image/png" href="./ลายเซนต์.png.jpeg">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</title>
@@ -44,49 +43,27 @@
   .tab{ padding:.45rem .8rem; border-radius:12px; cursor:pointer; }
   .tab.active{ background:#e0f2fe; color:#0369a1; font-weight:600; }
   @media (max-width:640px){ .day{ min-height:95px } .chip{ font-size:.7rem } }
-  /* Header layout upgrade */
-  .hero-card{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .hero-left{display:flex;gap:.9rem;align-items:center;min-width:260px}
-  .hero-logo{width:64px;height:64px;border-radius:18px;background:#fff;box-shadow:0 8px 18px rgba(15,23,42,.08);display:grid;place-items:center;overflow:hidden}
-  .hero-logo img{width:100%;height:100%;object-fit:contain}
-  .hero-title{line-height:1.15}
-  .hero-badges{display:flex;gap:.5rem;flex-wrap:wrap}
-  .badge{background:#fff;border-radius:999px;padding:.35rem .75rem;box-shadow:0 6px 14px rgba(15,23,42,.06)}
-  .badge b{font-weight:700}
-  .hero-link{display:block;text-decoration:none;color:inherit}
-  @media (min-width:1024px){
-    .hero-left{gap:1rem}
-    .hero-logo{width:72px;height:72px;border-radius:20px}
-    
 </style>
 </head>
 <body class="bg-grad text-slate-800">
 
 <!-- HEADER -->
 <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-    <div class="card p-5 hero-card">
-      <div class="hero-left">
-        <div class="hero-logo">
-          <img src="./ลายเซนต์.png.jpeg" alt="โลโก้โรงเรียน">
-        </div>
-        <div class="hero-title">
-          <h1 class="text-xl sm:text-2xl font-semibold">
-            ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม
-          </h1>
-          <p class="text-slate-500 text-sm">
-            เชื่อม Google Sheets • รองรับปฏิทินไทย (พ.ศ.)
-          </p>
-        </div>
-      </div>
-
-      <div class="hero-badges">
-        <span class="badge">สถานะเชื่อมต่อ: <b id="connStatus">ออฟไลน์</b></span>
-        <span class="badge">งานทั้งหมด: <b id="countAll">0</b></span>
-        <span class="badge">เดือนนี้: <b id="countMonth">0</b></span>
-        <span class="badge">วันนี้: <b id="countToday">0</b></span>
+  <div class="card p-5 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <span class="text-3xl">🏫</span>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-semibold">ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</h1>
+        <p class="text-slate-500 text-sm">เชื่อม Google Sheets • รองรับปฏิทินไทย (พ.ศ.)</p>
       </div>
     </div>
-  </a>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="px-3 py-1 rounded-full bg-white/70 card">สถานะเชื่อมต่อ: <b id="connStatus">ออฟไลน์</b></span>
+      <span class="px-3 py-1 rounded-full bg-white/70 card">งานทั้งหมด: <b id="countAll">0</b></span>
+      <span class="px-3 py-1 rounded-full bg-white/70 card">เดือนนี้: <b id="countMonth">0</b></span>
+      <span class="px-3 py-1 rounded-full bg-white/70 card">วันนี้: <b id="countToday">0</b></span>
+    </div>
+  </div>
 </header>
 
 <!-- CONTROL BAR -->
@@ -157,7 +134,7 @@
   <div class="modal-card">
     <div class="flex items-start justify-between">
       <div>
-        <h3 id="modalDayTitle" class="text-lg font-semibold">งานที่ …</h3>
+        <h3 id="modalDayTitle" class="text-lg font-semibold">เหตุการณ์ของวันที่ …</h3>
         <p id="modalDaySub" class="text-slate-500 text-sm"></p>
       </div>
       <button class="btn" onclick="closeDayModal()">ปิด</button>
@@ -284,7 +261,7 @@
 
 <script>
 /* ================= CONFIG ================= */
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxlPHm5hjekIrLS9jHZDrudcNSKiUdOGNmlp21KJNBfVU0dfLeeGLw2__pVDf4ik_qk/exec';
+const GAS_ENDPOINT = 'https://script.google.com/a/macros/nonsilapittayakhom.ac.th/s/AKfycbznIN6wc2z9tIkxl5qsXNRhqEfa787zfK5ej2leJZ1rrYfWYEka-14raHTVAXiHWC8O/exec';
 const ADMIN_PASSWORD = 'adminvichakarn';
 const CACHE_KEY = 'nsph_events_cache_v1';
 const CACHE_AT  = 'nsph_events_cache_at_v1';
@@ -305,10 +282,10 @@ const STATE = {
 const thMonths = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 function toBuddhistYearStr(d){
   const y = d.getFullYear()+543, m = thMonths[d.getMonth()], day=d.getDate();
-  return `${day} ${m} ${y}`;
+  return ${day} ${m} ${y};
 }
 function yymmLabel(d){
-  return `${thMonths[d.getMonth()]} ${d.getFullYear()+543}`;
+  return ${thMonths[d.getMonth()]} ${d.getFullYear()+543};
 }
 function isSameDate(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 
@@ -350,7 +327,7 @@ function dayRangeArray(ev){
   if(s && !e) return [s];
   return [];
 }
-  
+
 /* ================= DATA LAYER ================= */
 async function fetchFromGAS(){
   try{
@@ -403,24 +380,22 @@ function renderMonthGrid(){
 
   $('#monthGrid').html(frag.join(''));
   const monthEvents = eventsInMonth(y,m);
-  $('#monthList').html(monthEvents.map(e=>listItem(e)).join('') || `<div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>`);
+  $('#monthList').html(monthEvents.map(e=>listItem(e)).join('') || <div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>);
 }
 
-function blankCell(){ return `<div class="day" style="opacity:.35"></div>`; }
+function blankCell(){ return <div class="day" style="opacity:.35"></div>; }
 
 function dayCell(d){
   const isSun = d.getDay()===0, isSat=d.getDay()===6;
-  const cellCls = `day ${isSun?'sun':''} ${isSat?'sat':''}`;
+  const cellCls = day ${isSun?'sun':''} ${isSat?'sat':''};
   const evs = eventsOnDate(d);
   const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}"><span>${e.emoji||'🗓️'}</span><span>${timeLabel(e)}</span><span>${escapeHtml(e.title)}</span></div>`).join('');
-  const today = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
+  const today = isSameDate(d, STATE.today) ? <span class="today-badge">วันนี้</span> : '';
   return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
-  <div class="num">
-    ${d.getDate()} 
-    ${isSameDate(d, STATE.today) ? <span class="today-badge ml-1">วันนี้</span> : ''}
-  </div>
-  <div class="mt-6">${chips || `<div class="text-xs text-slate-400">ไม่มีรายการ</div>`}</div>
-</div>`;
+    ${today}
+    <div class="num">${d.getDate()}</div>
+    <div class="mt-6">${chips || `<div class="text-xs text-slate-400">ไม่มีรายการ</div>`}</div>
+  </div>`;
 }
 
 function listItem(e){
@@ -438,8 +413,8 @@ function renderListView(){
     const ds=[parseAnyDate(e.date), parseAnyDate(e.startDate), parseAnyDate(e.endDate)].filter(Boolean);
     return ds.map(x=>x.getFullYear()+543);
   }))].sort((a,b)=>a-b);
-  $('#filterYear').html(`<option value="">ทั้งหมด</option>` + years.map(y=>`<option>${y}</option>`).join(''));
-  $('#filterMonth').html(`<option value="">ทุกเดือน</option>`+thMonths.map((m,i)=>`<option value="${i}">${m}</option>`).join(''));
+  $('#filterYear').html(<option value="">ทั้งหมด</option> + years.map(y=>`<option>${y}</option>`).join(''));
+  $('#filterMonth').html(<option value="">ทุกเดือน</option>`+thMonths.map((m,i)=>`<option value="${i}">${m}</option>).join(''));
 
   applyListFilter();
 }
@@ -454,26 +429,26 @@ function applyListFilter(){
   if(y) data = data.filter(e=>eventTouchesYear(e, +y-543));
   if(m!=='') data = data.filter(e=>eventTouchesMonth(e, +m));
 
-  $('#listContainer').html(data.map(listItem).join('') || `<div class="text-slate-500">ไม่พบรายการ</div>`);
+  $('#listContainer').html(data.map(listItem).join('') || <div class="text-slate-500">ไม่พบรายการ</div>);
 }
 
 function renderYearView(){
   const year = STATE.cursor.getFullYear();
   const box = [];
   for(let m=0;m<12;m++){
-    const label = `${thMonths[m]} ${year+543}`;
+    const label = ${thMonths[m]} ${year+543};
     const first=new Date(year,m,1), last=new Date(year,m+1,0);
-    const head = `<div class="font-semibold mb-2 text-slate-700">${label}</div>`;
-    const gridHead = `<div class="mini-7 mb-1 text-center text-xs text-slate-500"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>`;
+    const head = <div class="font-semibold mb-2 text-slate-700">${label}</div>;
+    const gridHead = <div class="mini-7 mb-1 text-center text-xs text-slate-500"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>;
     const startDow = first.getDay();
     let cells = [];
-    for(let i=0;i<startDow;i++) cells.push(`<div class="card p-1 text-center text-xs opacity-30"></div>`);
+    for(let i=0;i<startDow;i++) cells.push(<div class="card p-1 text-center text-xs opacity-30"></div>);
     for(let d=1; d<=last.getDate(); d++){
       const dd=new Date(year,m,d);
       const has = eventsOnDate(dd).length>0;
-      cells.push(`<div class="card p-1 text-center text-xs ${has?'bg-sky-50':''}">${d}</div>`);
+      cells.push(<div class="card p-1 text-center text-xs ${has?'bg-sky-50':''}">${d}</div>);
     }
-    box.push(`<div class="card p-3">${head}${gridHead}<div class="mini-7">${cells.join('')}</div></div>`);
+    box.push(<div class="card p-3">${head}${gridHead}<div class="mini-7">${cells.join('')}</div></div>);
   }
   $('#yearGrid').html(box.join(''));
 }
@@ -517,7 +492,7 @@ function eventTouchesMonth(e,monthIdx){
   return [d,s,en].filter(Boolean).some(x=>x.getMonth()===monthIdx);
 }
 function timeLabel(e){
-  if(e.startTime && e.endTime) return `${e.startTime}-${e.endTime}`;
+  if(e.startTime && e.endTime) return ${e.startTime}-${e.endTime};
   if(e.startTime) return e.startTime;
   return 'ทั้งวัน';
 }
@@ -526,7 +501,7 @@ function rangeLabel(e){
   const s = parseAnyDate(e.startDate);
   const en = parseAnyDate(e.endDate);
   if(d) return toBuddhistYearStr(d);
-  if(s && en) return `${toBuddhistYearStr(s)} – ${toBuddhistYearStr(en)}`;
+  if(s && en) return ${toBuddhistYearStr(s)} – ${toBuddhistYearStr(en)};
   if(s) return toBuddhistYearStr(s);
   return '';
 }
@@ -535,20 +510,16 @@ function escapeHtml(t){ return (t??'').toString().replace(/[&<>"]/g,s=>({'&':'&a
 /* ================= MODALS ================= */
 function openDayModal(iso){
   const d = new Date(iso);
-  $('#modalDayTitle').text(`เหตุการณ์ของวันที่ ${toBuddhistYearStr(d)}`);
-  $('#modalDaySub').text(`วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]}`);
+  $('#modalDayTitle').text(เหตุการณ์ของวันที่ ${toBuddhistYearStr(d)});
+  $('#modalDaySub').text(วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]});
   const evs = eventsOnDate(d);
-  $('#modalDayList').html(evs.map((e,i)=>
-  `<div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
-    <div class="flex items-center gap-2 text-sky-700">
-      <span class="text-xl">${e.emoji||'🗓️'}</span>
-      <b>${escapeHtml(e.title)}</b>
-    </div>
-    <div class="text-sm text-slate-600 mt-1">${timeLabel(e)}</div>
-    <div class="text-sm text-slate-600">${rangeLabel(e)}</div>
-    <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
-  </div>`
-).join('') || `<div class="text-slate-500">ไม่มีรายการ</div>`);
+  $('#modalDayList').html(evs.map((e,i)=>`
+    <div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
+      <div class="flex items-center gap-2 text-sky-700"><span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b></div>
+      <div class="text-sm text-slate-600 mt-1">${rangeLabel(e)} ${timeLabel(e)}</div>
+      <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
+    </div>`).join('') || <div class="text-slate-500">ไม่มีรายการ</div>);
+  $('#modal-day').addClass('show');
 }
 function closeDayModal(){ $('#modal-day').removeClass('show'); }
 function openDetail(id){
@@ -585,7 +556,7 @@ function openAdmin(tab='add', id=null){
 function closeAdminModal(){ $('#modal-admin').removeClass('show'); }
 
 function switchTab(name){
-  $('.tab').removeClass('active'); $(`.tab[data-tab="${name}"]`).addClass('active');
+  $('.tab').removeClass('active'); $(.tab[data-tab="${name}"]).addClass('active');
   $('#tab-add,#tab-edit,#tab-delete').addClass('hidden');
   $('#tab-'+name).removeClass('hidden');
   if(name==='edit' || name==='delete') refreshAdminLists();
@@ -622,7 +593,7 @@ function refreshAdminLists(cb){
   if(cb) cb();
 }
 
-function dateForInput(v){ const d=parseAnyDate(v); if(!d) return ''; const m=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2); return `${d.getFullYear()}-${m}-${dd}`; }
+function dateForInput(v){ const d=parseAnyDate(v); if(!d) return ''; const m=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2); return ${d.getFullYear()}-${m}-${dd}; }
 
 /* ADD / EDIT / DELETE actions */
 $('#btnAddConfirm').on('click', async ()=>{
@@ -644,7 +615,7 @@ $('#btnDeleteConfirm').on('click', async ()=>{
 });
 
 function collectForm(prefix, mode){
-  const v = (id)=>$(`#${prefix}-${id}`).val();
+  const v = (id)=>$(#${prefix}-${id}).val();
   const payload = {
     id:'', title:v('title'), emoji:v('emoji'), startTime:v('startTime'), endTime:v('endTime'),
     location:v('location'), owner:v('owner'), details:v('details'),
@@ -725,7 +696,7 @@ $('#searchInput,#filterMonth,#filterYear').on('input change', applyListFilter);
 
 // fill dropdowns
 function fillStaticOptions(){
-  $('#add-emoji,#edit-emoji').html(`<option value="">(ไม่มี)</option>`+EMOJI_CHOICES.map(e=>`<option>${e}</option>`).join(''));
+  $('#add-emoji,#edit-emoji').html(<option value="">(ไม่มี)</option>`+EMOJI_CHOICES.map(e=>`<option>${e}</option>).join(''));
   $('#add-location,#edit-location').html(LOCATIONS.map(s=>`<option>${s}</option>`).join(''));
   $('#add-owner,#edit-owner').html(OWNERS.map(s=>`<option>${s}</option>`).join(''));
 }
