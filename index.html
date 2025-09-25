@@ -63,22 +63,30 @@
 
 <!-- HEADER -->
 <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-  <div class="card p-5 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <img src="./ลายเซนต์.png.jpeg" alt="โลโก้โรงเรียน"
-     style="width:64px;height:64px;object-fit:contain;border-radius:12px;">
-      <div>
-        <h1 class="text-xl sm:text-2xl font-semibold">ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</h1>
-        <p class="text-slate-500 text-sm">เชื่อม Google Sheets • รองรับปฏิทินไทย (พ.ศ.)</p>
+  <a class="hero-link" href="https://www.nonsilapittayakhom.ac.th" target="_blank" rel="noopener">
+    <div class="card p-5 hero-card">
+      <div class="hero-left">
+        <div class="hero-logo">
+          <img src="./logo.png" alt="โลโก้โรงเรียน">
+        </div>
+        <div class="hero-title">
+          <h1 class="text-xl sm:text-2xl font-semibold">
+            ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม
+          </h1>
+          <p class="text-slate-500 text-sm">
+            เชื่อม Google Sheets • รองรับปฏิทินไทย (พ.ศ.)
+          </p>
+        </div>
+      </div>
+
+      <div class="hero-badges">
+        <span class="badge">สถานะเชื่อมต่อ: <b id="connStatus">ออฟไลน์</b></span>
+        <span class="badge">งานทั้งหมด: <b id="countAll">0</b></span>
+        <span class="badge">เดือนนี้: <b id="countMonth">0</b></span>
+        <span class="badge">วันนี้: <b id="countToday">0</b></span>
       </div>
     </div>
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="px-3 py-1 rounded-full bg-white/70 card">สถานะเชื่อมต่อ: <b id="connStatus">ออฟไลน์</b></span>
-      <span class="px-3 py-1 rounded-full bg-white/70 card">งานทั้งหมด: <b id="countAll">0</b></span>
-      <span class="px-3 py-1 rounded-full bg-white/70 card">เดือนนี้: <b id="countMonth">0</b></span>
-      <span class="px-3 py-1 rounded-full bg-white/70 card">วันนี้: <b id="countToday">0</b></span>
-    </div>
-  </div>
+  </a>
 </header>
 
 <!-- CONTROL BAR -->
