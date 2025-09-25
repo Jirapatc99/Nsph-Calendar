@@ -57,6 +57,14 @@
   @media (min-width:1024px){
     .hero-left{gap:1rem}
     .hero-logo{width:72px;height:72px;border-radius:20px}
+    .chip div:first-child {
+  font-weight: 500;
+}
+
+.chip div.opacity-70 {
+  font-size: 0.85em;
+  color: #555;
+}
 </style>
 </head>
 <body class="bg-grad text-slate-800">
@@ -349,7 +357,19 @@ function dayRangeArray(ev){
   if(s && !e) return [s];
   return [];
 }
+function chipHtml(ev){
+  const kind = ev.date ? 'allDay' : (ev.startDate && ev.endDate ? 'range' : 'allDay');
+  const title = `${ev.emoji||''} ${escapeHtml(ev.title)}`;
+  const time = timeLabel(ev);
 
+  return `
+    <div class="chip ${kind}" onclick="openDetail('${ev.id}')">
+      <div>${title}</div>
+      <div class="opacity-70">${time}</div>
+    </div>
+  `;
+}
+  
 /* ================= DATA LAYER ================= */
 async function fetchFromGAS(){
   try{
