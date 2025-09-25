@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root{ --grad-start:#93c5fd; --grad-end:#e0f2fe; }
+  html,body{height:100%}
+  body{font-family:'Prompt',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',"Noto Sans Thai",sans-serif;}
+  .bg-grad{ background:linear-gradient(135deg,var(--grad-start),var(--grad-end)); }
+  .card{ background:#fff; border-radius:22px; box-shadow:0 10px 30px rgba(15,23,42,.08), 0 2px 8px rgba(15,23,42,.06); }
+  .btn{ display:inline-flex; align-items:center; gap:.5rem; padding:.5rem .9rem; border-radius:14px; background:#fff; box-shadow:0 6px 16px rgba(15,23,42,.06); }
+  .btn:hover{ background:#f8fafc }
+  .btn-primary{ background:linear-gradient(135deg,#38bdf8,#3b82f6); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.05) }
+  .grid-7{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.5rem; }
+  .mini-7{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.25rem; }
+  .dow{ text-align:center; font-weight:600; color:#334155 }
+  .day{ min-height:110px; position:relative; padding:.55rem; border-radius:16px; background:#fff; }
+  .day.sat{ background:rgba(147,197,253,.25) }
+  .day.sun{ background:rgba(239,68,68,.15) }
+  .day .num{ position:absolute; top:.5rem; right:.6rem; font-weight:600; color:#334155 }
+  .today-badge{ background:linear-gradient(135deg,#0ea5e9,#38bdf8); color:#fff; padding:.1rem .45rem; border-radius:999px; font-size:.7rem; font-weight:700; margin-left:4px; }
+  .chip{ display:flex; flex-direction:column; font-size:.78rem; padding:.18rem .45rem; border-radius:12px; background:#f0f9ff; color:#0369a1; margin:.22rem 0; overflow:hidden; }
+  .chip:hover{ background:#e0f2fe }
+  .modal{ position:fixed; inset:0; display:none; place-items:center; z-index:50; background:rgba(15,23,42,.35); backdrop-filter:blur(3px); }
+  .modal.show{ display:grid; }
+  .modal-card{ width:min(920px,92vw); background:#fff; border-radius:20px; padding:1.25rem; }
+  .field{ width:100%; border:1px solid #e5e7eb; border-radius:12px; padding:.55rem .8rem; }
+  .tab{ padding:.45rem .8rem; border-radius:12px; cursor:pointer; }
+  .tab.active{ background:#e0f2fe; color:#0369a1; font-weight:600; }
+  @media (max-width:640px){ .day{ min-height:95px } .chip{ font-size:.7rem } }
+</style>
+</head>
+<body class="bg-grad text-slate-800">
+<h1 class="text-center mt-10 text-2xl font-bold">ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</h1>
+<script>
+  console.log("index.html loaded successfully.");
+</script>
+</body>
+</html>
