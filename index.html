@@ -534,7 +534,34 @@ $(function(){
   $('#btnToday').on('click',()=>{ STATE.cursor = new Date(); renderAll(); });
 
   // ซิงก์
-  $('#btnSync').on('click',()=> syncFromGAS());
+  $('#btnSync').on('click', async ()=>{ 
+  await synchronizeNow(); 
+});
+
+// ===============================
+// ฟังก์ชัน Sync Google Sheets
+// ===============================
+async function synchronizeNow(){
+  try{
+    await showLoading(true);
+    const onlineData = await fetchFromGAS();   // ดึงข้อมูลจาก Apps Script
+    if(onlineData && Array.isArray(onlineData)){
+      STATE.events = normalizeIncoming(onlineData); // จัดรูปแบบข้อมูล
+      saveToCache(STATE.events);
+      confetti({ particleCount: 140, spread: 70 });
+      Swal.fire('สำเร็จ','ซิงก์ข้อมูลจาก Google Sheets แล้ว','success');
+    }else{
+      Swal.fire('โหมดออฟไลน์','ใช้ข้อมูลจากเครื่องชั่วคราว','info');
+      STATE.events = loadFromCache();
+    }
+    renderAll();
+    fillSelectsForEditDelete && fillSelectsForEditDelete();
+  }catch(e){
+    Swal.fire('ผิดพลาด', String(e.message||e), 'error');
+  }finally{
+    showLoading(false);
+  }
+}
 
   // ตัวกรอง
   $('#quickOwner').on('change', function(){ STATE.filterOwner = this.value; renderAll(); });
