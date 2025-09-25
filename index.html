@@ -1,501 +1,562 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</title>
 
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Thai Prompt font -->
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
+
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- Confetti -->
+
+<!-- confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
 <style>
-  :root{ --grad-a:#93c5fd; --grad-b:#e0f2fe; }
-  html,body{height:100%}
-  body{font-family:'Prompt',system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans Thai',sans-serif}
-  .bg-grad{ background:linear-gradient(135deg,var(--grad-a),var(--grad-b)); }
-  .card{ background:#fff; border-radius:22px; box-shadow:0 10px 30px rgba(15,23,42,.08),0 2px 8px rgba(15,23,42,.06); }
-  .btn{ display:inline-flex; align-items:center; gap:.5rem; padding:.5rem .9rem; border-radius:14px; background:#fff; box-shadow:0 6px 16px rgba(15,23,42,.06); }
-  .btn:hover{ background:#f8fafc }
-  .btn-primary{ background:linear-gradient(135deg,#38bdf8,#3b82f6); color:#fff; }
-  .btn-primary:hover{ filter:brightness(1.05) }
-
-  /* Header (สวย/โปร) */
-  .hero-card{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .hero-left{display:flex;gap:.9rem;align-items:center;min-width:260px}
-  .hero-logo{width:72px;height:72px;border-radius:20px;background:#fff;box-shadow:0 8px 18px rgba(15,23,42,.08);display:grid;place-items:center;overflow:hidden}
-  .hero-logo img{width:100%;height:100%;object-fit:contain}
-  .hero-badges{display:flex;gap:.5rem;flex-wrap:wrap}
-  .badge{background:#fff;border-radius:999px;padding:.35rem .75rem;box-shadow:0 6px 14px rgba(15,23,42,.06)}
-  .badge b{font-weight:700}
-  /* Calendar */
-  .grid-7{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.6rem; }
-  .dow{ text-align:center; font-weight:600; color:#334155 }
-  .day{ min-height:118px; position:relative; padding:.6rem .55rem .55rem .55rem; border-radius:18px; background:#fff; }
-  .day.sun{ box-shadow: inset 0 0 0 2px rgba(239,68,68,.15); background:rgba(239,68,68,.06); }
-  .day.sat{ box-shadow: inset 0 0 0 2px rgba(99,102,241,.18); background:rgba(99,102,241,.06); }
-  .day .num{ position:absolute; top:.5rem; right:.65rem; font-weight:600; color:#475569 }
-  .today-badge{ position:absolute; top:.55rem; left:.6rem; background:linear-gradient(135deg,#0ea5e9,#38bdf8); color:#fff; padding:.1rem .5rem; border-radius:999px; font-size:.72rem; font-weight:700; }
-  .chip{ display:flex; gap:.35rem; align-items:center; font-size:.8rem; padding:.22rem .48rem; border-radius:10px; margin:.25rem 0; cursor:pointer;
-         background:#eef2ff; color:#4338ca; box-shadow:0 2px 6px rgba(67,56,202,.08); }
-  .chip:hover{ filter:brightness(1.02) }
-  .chip.allDay{ background:#ecfeff; color:#0369a1; box-shadow:0 2px 6px rgba(3,105,161,.08); }
-  .chip.range{ background:#f0fdf4; color:#166534; box-shadow:0 2px 6px rgba(22,101,52,.08); }
-  .muted{ opacity:.38 }
-  .list-card{ display:grid; grid-template-columns:64px 1fr auto; gap:.9rem; align-items:center; }
-  .list-date{ text-align:center; line-height:1.05; }
-  .list-date .d{ font-size:1.25rem; font-weight:800; }
-  .modal{ position:fixed; inset:0; display:none; place-items:center; z-index:50; background:rgba(15,23,42,.45); backdrop-filter:blur(2px); }
-  .modal.show{ display:grid; }
-  .modal-card{ width:min(880px,92vw); background:#fff; border-radius:20px; padding:1.25rem; box-shadow:0 24px 48px rgba(15,23,42,.25); }
-  .field{ width:100%; border:1px solid #e5e7eb; border-radius:12px; padding:.55rem .8rem; }
-  @media (max-width:640px){ .day{ min-height:100px } .chip{ font-size:.72rem } }
+  :root{
+    --grad-start:#93c5fd; /* sky-300 */
+    --grad-end:#e0e7ff;   /* indigo-100 */
+  }
+  html,body{height:100%;}
+  body{font-family:'Prompt',sans-serif;background:linear-gradient(135deg,var(--grad-start),var(--grad-end));}
+  .soft-card{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(31,41,55,.08),0 2px 8px rgba(31,41,55,.06);}
+  .btn{background:#fff;border:1px solid rgba(148,163,184,.5);border-radius:12px;padding:.5rem .9rem;font-weight:600}
+  .btn:hover{background:#f8fafc}
+  .btn-primary{background:linear-gradient(135deg,#60a5fa,#6366f1);color:#fff;border:none}
+  .btn-primary:hover{filter:brightness(.98)}
+  .header-logo{width:56px;height:56px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 4px 14px rgba(2,132,199,.25)}
+  /* Month grid */
+  .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.75rem}
+  .day{min-height:120px;background:#fff;border-radius:14px;position:relative;padding:10px 10px 8px 10px;box-shadow:inset 0 0 0 1px rgba(15,23,42,.04)}
+  .day .num{position:absolute;top:10px;left:12px;font-weight:700;color:#334155}
+  .day.muted{background:transparent;box-shadow:none}
+  .day.sun{background:rgba(239,68,68,.06)}
+  .day.sat{background:rgba(99,102,241,.06)}
+  .today-badge{position:absolute;top:10px;right:10px;background:#0ea5e9;color:#fff;font-size:.7rem;border-radius:999px;padding:2px 8px}
+  .chip{display:flex;gap:.4rem;align-items:center;font-size:.78rem;margin:.35rem 0 0;padding:.35rem .55rem;border-radius:10px;background:#f1f5f9;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chip.range{background:#ecfeff}
+  .chip.allDay{background:#eef2ff}
+  .chip:hover{box-shadow:0 4px 10px rgba(2,132,199,.12)}
+  .top-stat .label{color:#64748b;font-size:.85rem}
+  .top-stat .num{font-weight:800;color:#0f172a}
+  /* list cards */
+  .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,.06),0 1px 6px rgba(2,6,23,.06)}
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(15,23,42,.35);display:none;align-items:center;justify-content:center;z-index:50}
+  .modal.show{display:flex}
+  .modal .panel{background:#fff;border-radius:20px;box-shadow:0 25px 60px rgba(2,6,23,.25);max-width:760px;width:92%;padding:18px}
+  .year-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(min-width:1024px){.year-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
-<body class="bg-grad text-slate-800">
+<body class="pb-16">
 
 <!-- HEADER -->
-<header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-  <div class="card p-5 hero-card">
-    <div class="hero-left">
-      <div class="hero-logo"><img src="./logo.png" alt="โลโก้โรงเรียน"></div>
-      <div>
-        <h1 class="text-xl sm:text-2xl font-semibold">ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</h1>
-        <p class="text-slate-500 text-sm">โดย งานส่งเสริมนวัตกรรมและเครือข่ายสัมพันธ์วิชาการ กลุ่มบริหารวิชาการ</p>
+<header class="soft-card max-w-6xl mx-auto mt-6 p-4 sm:p-6">
+  <div class="flex items-center gap-3">
+    <!-- โลโก้: ใส่รูปโลโก้โรงเรียนได้เองที่ src -->
+    <img class="header-logo" src="https://raw.githubusercontent.com/nskvichakarn/nskvichakarn.github.io/main/logo-nsph.png" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f3eb.svg'">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+        ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม
+      </h1>
+      <div class="text-slate-500 text-sm">
+        เชื่อม Google Sheets · รองรับปฏิทินไทย (พ.ศ.)
       </div>
     </div>
-    <div class="hero-badges">
-      <span class="badge">สถานะเชื่อมต่อ: <b id="connStatus">ออฟไลน์</b></span>
-      <span class="badge">งานทั้งหมด: <b id="countAll">0</b></span>
-      <span class="badge">งานในเดือนนี้: <b id="countMonth">0</b></span>
-      <span class="badge">วันนี้: <b id="countToday">0</b></span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="rounded-full bg-white/70 px-3 py-1 text-sm">สถานะเชื่อมต่อ: <b id="connStatus">ออฟไลน์</b></span>
+      <span class="rounded-full bg-white/70 px-3 py-1 text-sm">งานทั้งหมด: <b id="countAll">0</b></span>
+      <span class="rounded-full bg-white/70 px-3 py-1 text-sm">เดือนนี้: <b id="countMonth">0</b></span>
+      <span class="rounded-full bg-white/70 px-3 py-1 text-sm">วันนี้: <b id="countToday">0</b></span>
     </div>
   </div>
 </header>
+
 <!-- CONTROL BAR -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
-  <div class="card p-3 flex flex-col lg:flex-row items-center justify-between gap-3">
-    <div class="flex flex-wrap gap-2">
+<section class="soft-card max-w-6xl mx-auto mt-4 p-4 sm:p-5">
+  <div class="flex flex-wrap items-center gap-3">
+    <div class="flex gap-2">
       <button id="btnViewMonth" class="btn">มุมมองเดือน</button>
-      <button id="btnViewList" class="btn">มุมมองรายการ</button>
-      <button id="btnViewYear" class="btn">มุมมองรายปี</button>
+      <button id="btnViewList"  class="btn">มุมมองรายการ</button>
+      <button id="btnViewYear"  class="btn">มุมมองรายปี</button>
     </div>
-    <div class="flex items-center gap-2">
+
+    <div class="flex items-center gap-2 mx-auto">
       <button id="btnPrev" class="btn">‹</button>
-      <div id="currentMonthLabel" class="px-4 py-2 rounded-2xl text-white font-semibold" style="background:linear-gradient(135deg,#38bdf8,#3b82f6);min-width:220px;text-align:center">–</div>
+      <div class="rounded-full bg-gradient-to-tr from-sky-400 to-blue-500 text-white px-4 py-1 text-sm font-semibold">
+        <span id="currentMonthLabel">เดือน ปี</span>
+      </div>
       <button id="btnNext" class="btn">›</button>
       <button id="btnToday" class="btn">วันนี้</button>
     </div>
-    <div class="flex flex-wrap gap-2">
+
+    <div class="flex gap-2 ml-auto">
       <button id="btnSync" class="btn">ซิงก์ Google Sheets</button>
       <button id="btnAdmin" class="btn btn-primary">แอดมิน</button>
     </div>
   </div>
-</div>
 
-<!-- MAIN -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5 pb-20">
-
-  <!-- DASH -->
-  <section class="grid md:grid-cols-4 gap-3">
-    <div class="card p-4">
-      <div class="text-slate-500 text-sm">จำนวนงานทั้งหมด</div>
-      <div class="text-2xl font-bold mt-1" id="dashAll">0</div>
-      <div class="h-2 mt-2 rounded-full bg-slate-100"><div id="barAll" class="h-2 rounded-full bg-sky-300 w-0"></div></div>
-    </div>
-    <div class="card p-4">
-      <div class="text-slate-500 text-sm">งานในเดือนนี้</div>
-      <div class="text-2xl font-bold mt-1" id="dashMonth">0</div>
-      <div class="h-2 mt-2 rounded-full bg-slate-100"><div id="barMonth" class="h-2 rounded-full bg-emerald-300 w-0"></div></div>
-    </div>
-    <div class="card p-4">
-      <div class="text-slate-500 text-sm">สถานะเชื่อมต่อ</div>
-      <div class="text-2xl font-bold mt-1" id="dashConn">ออฟไลน์</div>
-    </div>
-    <div class="card p-4">
-      <div class="text-slate-500 text-sm">ตัวกรองด่วน</div>
-      <div class="mt-2 flex gap-2">
-        <select id="quickOwner" class="field"><option value="">ทั้งหมด</option></select>
-        <select id="quickLocation" class="field"><option value="">ทุกสถานที่</option></select>
+  <!-- สถิติย่อย -->
+  <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-4">
+    <div class="soft-card top-stat p-3"><div class="label">จำนวนงานทั้งหมด</div><div class="num" id="statAll">0</div></div>
+    <div class="soft-card top-stat p-3"><div class="label">งานในเดือนนี้</div><div class="num" id="statMonth">0</div></div>
+    <div class="soft-card top-stat p-3"><div class="label">สถานะเชื่อมต่อ</div><div class="num" id="statConn">ออฟไลน์</div></div>
+    <div class="soft-card top-stat p-3"><div class="label">ตัวกรองด่วน</div>
+      <div class="flex gap-2 mt-2 text-sm">
+        <select id="quickOwner" class="border rounded-md px-2 py-1">
+          <option value="">ทุกฝ่ายงาน</option>
+        </select>
+        <select id="quickLocation" class="border rounded-md px-2 py-1">
+          <option value="">ทุกสถานที่</option>
+        </select>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- MONTH VIEW -->
-  <section id="view-month" class="space-y-3 mt-5">
-    <div class="grid-7">
-      <div class="dow">อา</div><div class="dow">จ</div><div class="dow">อ</div><div class="dow">พ</div><div class="dow">พฤ</div><div class="dow">ศ</div><div class="dow">ส</div>
+<!-- CALENDAR VIEWS -->
+<section class="max-w-6xl mx-auto mt-4 mb-24">
+
+  <!-- Month View -->
+  <div id="viewMonth" class="soft-card p-4 sm:p-6">
+    <div class="grid grid-cols-7 gap-3 text-center text-slate-600 font-semibold mb-2">
+      <div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div>
     </div>
-    <div id="monthGrid" class="grid-7"></div>
-
-    <div class="card p-4 mt-4">
-      <div class="flex items-center justify-between">
-        <div class="font-semibold">รายการทั้งหมดของเดือนนี้</div>
-        <button id="btnToggleList" class="btn">ซ่อน/แสดง</button>
+    <div class="cal-grid" id="monthGrid"></div>
+    <div class="mt-6">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-bold text-slate-700">รายการทั้งหมดของเดือนนี้</h3>
+        <button id="btnToggleAll" class="btn text-sm">ซ่อน/แสดง</button>
       </div>
-      <div id="monthList" class="mt-3 space-y-2"></div>
+      <div id="monthList" class="space-y-3"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- LIST VIEW -->
-  <section id="view-list" class="hidden space-y-3 mt-5">
-    <div class="card p-4 grid md:grid-cols-3 gap-3">
-      <input id="searchInput" class="field" placeholder="ค้นหาชื่องาน/รายละเอียด">
-      <select id="filterMonth" class="field"></select>
-      <select id="filterYear" class="field"></select>
+  <!-- List View -->
+  <div id="viewList" class="soft-card p-4 sm:p-6 hidden">
+    <div class="flex flex-wrap items-center gap-2 mb-3">
+      <input id="searchBox" placeholder="พิมพ์ค้นหา (ชื่อกิจกรรม/สถานที่/ผู้รับผิดชอบ)" class="border rounded-lg px-3 py-2 w-full sm:w-96">
+      <select id="listMonth" class="border rounded-lg px-3 py-2">
+      </select>
     </div>
-    <div id="listContainer" class="card p-3 space-y-2"></div>
-  </section>
+    <div id="listContainer" class="space-y-3"></div>
+  </div>
 
-  <!-- YEAR VIEW -->
-  <section id="view-year" class="hidden mt-5">
-    <div id="yearGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </section>
-</main>
+  <!-- Year View -->
+  <div id="viewYear" class="soft-card p-4 sm:p-6 hidden">
+    <div class="year-grid" id="yearContainer"></div>
+  </div>
+</section>
 
-<!-- MODALS -->
-<!-- Day modal -->
+<!-- Modal: งานของวัน -->
 <div id="modal-day" class="modal">
-  <div class="modal-card">
-    <div class="flex items-center justify-between">
-      <h3 id="modalDayTitle" class="text-lg font-semibold">งานวันที่ …</h3>
-      <button class="btn" onclick="closeDayModal()">ปิด</button>
+  <div class="panel">
+    <div class="flex items-center justify-between mb-2">
+      <div class="text-lg font-bold" id="modalDayTitle">งานวันที่ ...</div>
+      <button class="btn" onclick="$('#modal-day').removeClass('show')">ปิด</button>
     </div>
-    <div id="modalDayList" class="mt-3 space-y-2"></div>
+    <div id="modalDayList" class="space-y-2"></div>
   </div>
 </div>
 
-<!-- Detail modal -->
+<!-- Modal: รายละเอียดงาน (อ่านอย่างเดียว) -->
 <div id="modal-detail" class="modal">
-  <div class="modal-card">
-    <div class="flex items-start justify-between">
-      <div class="flex items-center gap-2"><div id="detailEmoji" class="text-2xl">📌</div><h3 id="detailTitle" class="text-lg font-semibold"></h3></div>
+  <div class="panel">
+    <div class="flex items-center justify-between mb-2">
+      <div class="text-lg font-bold" id="detailTitle">รายละเอียดงาน</div>
       <button class="btn" onclick="$('#modal-detail').removeClass('show')">ปิด</button>
     </div>
-    <div id="detailBody" class="mt-2 text-sm space-y-1"></div>
+    <div id="detailBody" class="text-slate-700 text-sm"></div>
   </div>
 </div>
-
-<!-- Admin modal (ตัดให้กระทัดรัด: เพิ่ม/แก้ไข/ลบ) -->
-<div id="modal-admin" class="modal">
-  <div class="modal-card">
-    <div class="flex items-center justify-between"><h3 class="text-lg font-semibold">แอดมินจัดการงาน</h3><button class="btn" onclick="$('#modal-admin').removeClass('show')">ปิด</button></div>
-    <div class="mt-3 grid md:grid-cols-2 gap-3">
-      <input id="f-title" class="field" placeholder="ชื่อกิจกรรม">
-      <select id="f-emoji" class="field"></select>
-
-      <div class="md:col-span-2 flex gap-4 items-center">
-        <label class="flex items-center gap-2"><input type="radio" name="mode" value="single" checked> วันเดียว</label>
-        <label class="flex items-center gap-2"><input type="radio" name="mode" value="range"> ช่วงวัน</label>
-      </div>
-
-      <div id="wrap-single"><input id="f-date" type="date" class="field"></div>
-      <div id="wrap-range" class="hidden grid grid-cols-2 gap-3">
-        <input id="f-startDate" type="date" class="field">
-        <input id="f-endDate" type="date" class="field">
-      </div>
-
-      <input id="f-startTime" type="time" class="field">
-      <input id="f-endTime" type="time" class="field">
-
-      <select id="f-location" class="field"></select>
-      <select id="f-owner" class="field"></select>
-
-      <textarea id="f-details" rows="3" class="field md:col-span-2" placeholder="รายละเอียด (ถ้ามี)"></textarea>
-    </div>
-
-    <div class="mt-4 flex gap-2">
-      <button id="btnCreate" class="btn btn-primary">เพิ่ม</button>
-      <select id="editSelect" class="field"></select>
-      <button id="btnUpdate" class="btn">แก้ไข</button>
-      <button id="btnDelete" class="btn" style="background:#ef4444;color:#fff">ลบ</button>
-    </div>
-  </div>
-</div>
-<!-- Loading -->
-<div id="loading" class="modal"><div class="modal-card text-center">
-  <div class="mx-auto mb-2 w-10 h-10 rounded-full border-4 border-sky-400 border-t-transparent animate-spin"></div>
-  <div class="text-slate-600">กำลังโหลด…</div>
-</div></div>
 
 <script>
-/* ================= CONFIG ================= */
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwSkvApjUvQAxn0LijGSEA7GVuPO_LeQGErgmOlugu4_MCrcH2w_k6V2efz7DFxNCf8/exec'; // ใส่ URL web app ที่ deploy แบบ Anyone
+/* =========================
+   CONFIG
+========================= */
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwSkvApjUvQAxn0LijGSEA7GVuPO_LeQGErgmOlugu4_MCrcH2w_k6V2efz7DFxNCf8/exec';
 const ADMIN_PASSWORD = 'adminvichakarn';
 const CACHE_KEY = 'nsph_events_cache_v2';
 
-const EMOJI_CHOICES = ["🎓","📚","🧪","🔬","🧮","🧠","🗓️","✏️","📝","🏫","🔔","🏆","🎯","📢","🧭","🖥️"];
-const LOCATIONS = ["-ไม่มี-.","หอประชุมศิลานุสรณ์","อาคารปาริชาติ","อาคารเฟื่องฟ้า","โรงฝึกงาน","สนามฟุตบอล","สนามวอลเลย์บอล","หน้าเสาธง","ห้องเคมี","ห้องชีววิทยา","ห้องเรียนรวม","ห้องสภานักเรียน","ห้องวิชาการ","ห้องงบประมาณ","ห้องบริหารทั่วไป","ห้องการงาน","ห้องวิทย์กายภาพ","ห้องภาษาไทย","ห้องภาษาอังกฤษ","ห้องพยาบาล","ห้องคณิตศาสตร์","ห้องคอมพิวเตอร์","ห้องสมุด"];
-const OWNERS = ["กลุ่มบริหารวิชาการ","กลุ่มบริหารงบประมาณ","กลุ่มบริหารทั่วไป","กลุ่มกลุ่มบริหารบุคคล","ฝ่ายกิจการนักเรียน","อื่นๆ"];
+/* โทนสี/ชิพ/ข้อมูล dropdown */
+const EMOJI_CHOICES = ["🏫","📚","📝","📢","📊","🧪","🧬","🧠","💡","🎓","📅","⏰","📍","🧑🏻‍🏫","🧑🏻‍🎓","🛠️"];
+const LOCATIONS = [
+ "หอประชุมศิลานุสรณ์","อาคารปาริชาติ","อาคารเฟื่องฟ้า","โรงฝึกงาน","สนามฟุตบอล","สนามวอลเลย์บอล","หน้าเสาธง",
+ "ห้องเคมี","ห้องชีววิทยา","ห้องเรียนรวม","ห้องสภานักเรียน","ห้องวิชาการ","ห้องงบประมาณ","ห้องบริหารทั่วไป",
+ "ห้องการงาน","ห้องวิทย์กายภาพ","ห้องภาษาไทย","ห้องภาษาอังกฤษ","ห้องพยาบาล","ห้องคณิตศาสตร์","ห้องคอมพิวเตอร์","ห้องสมุด"
+];
+const OWNERS = [
+ "กลุ่มบริหารวิชาการ","กลุ่มบริหารงบประมาณ","กลุ่มบริหารทั่วไป","กลุ่มบริหารบุคคล","ฝ่ายกิจการนักเรียน","อื่นๆ"
+];
 
-/* ================= STATE ================= */
-const STATE = { today:new Date(), cursor:new Date(), events:[], admin:false, editing:null };
+/* =========================
+   STATE
+========================= */
+const STATE = {
+  events: [],
+  cursor: new Date(),
+  today: new Date(),
+  view: 'month', // month | list | year
+  filterOwner: '',
+  filterLocation: ''
+};
 
-/* ================= UTIL: Thai/Date ================= */
-const thMonths=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-function thLabel(d){return `${d.getDate()} ${thMonths[d.getMonth()]} ${d.getFullYear()+543}`;}
-function ymLabel(d){return `${thMonths[d.getMonth()]} ${d.getFullYear()+543}`;}
-function sameDate(a,b){return a.getFullYear()==b.getFullYear()&&a.getMonth()==b.getMonth()&&a.getDate()==b.getDate();}
+/* =========================
+   HELPERS
+========================= */
+function buddhistLabel(d){
+  const thMonths=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  return ${thMonths[d.getMonth()]} ${d.getFullYear()+543};
+}
+function sameDate(a,b){ return a.getFullYear()==b.getFullYear() && a.getMonth()==b.getMonth() && a.getDate()==b.getDate(); }
 function parseAny(v){
   if(!v) return null;
   if(v instanceof Date) return v;
-  if(typeof v==='number'){ // excel serial
-    const base = new Date(Date.UTC(1899,11,30)); return new Date(base.getTime()+v*86400000);
-  }
+  if(typeof v==='number'){ const base=new Date(Date.UTC(1899,11,30)); return new Date(base.getTime()+v*86400000); }
   if(/^\d{4}-\d{2}-\d{2}$/.test(v)){ const [Y,M,D]=v.split('-').map(Number); return new Date(Y,M-1,D); }
-  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v)){ let [D,M,Y]=v.split('/').map(Number); if(Y>2400) Y-=543; return new Date(Y,M-1,D); }
   const d=new Date(v); return isNaN(d)?null:d;
 }
-function dateInput(v){ const d=parseAny(v); if(!d) return ''; const m=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2); return `${d.getFullYear()}-${m}-${dd}`;}
-function eventDays(ev){ const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
-  if(d) return [d]; if(s&&e){ const arr=[]; let cur=new Date(s); while(cur<=e){arr.push(new Date(cur)); cur.setDate(cur.getDate()+1);} return arr;}
-  if(s) return [s]; return [];
+function eventDays(ev){
+  const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
+  if(d) return [d];
+  if(s&&e){ const arr=[]; let c=new Date(s); while(c<=e){ arr.push(new Date(c)); c.setDate(c.getDate()+1); } return arr; }
+  if(s) return [s];
+  return [];
 }
-function timeLabel(ev){ if(ev.startTime&&ev.endTime) return `${ev.startTime}-${ev.endTime}`; if(ev.startTime) return ev.startTime; return 'ทั้งวัน'; }
-function rangeLabel(ev){ const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
-  if(d) return thLabel(d); if(s&&e) return `${thLabel(s)} – ${thLabel(e)}`; if(s) return thLabel(s); return ''; }
+function timeLabel(ev){
+  if(ev.startTime && ev.endTime) return ${ev.startTime}-${ev.endTime};
+  if(ev.startTime) return ev.startTime;
+  return 'ทั้งวัน';
+}
 function escapeHtml(t){ return (t??'').toString().replace(/[&<>"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
 
-/* ================= DATA ================= */
-async function fetchFromGAS(){ try{ const r=await fetch(GAS_ENDPOINT,{cache:'no-store'});const j=await r.json(); if(j.status==='ok') return j.data; }catch(e){} return null; }
-async function postToGAS(mode,payload){ const r=await fetch(GAS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,payload})}); return r.json(); }
-function normalize(rows){ return (rows||[]).map(r=>({id:(r.id??'').toString(),title:r.title??'',date:r.date??'',startDate:r.startDate??'',endDate:r.endDate??'',startTime:r.startTime??'',endTime:r.endTime??'',location:r.location??'',owner:r.owner??'',details:r.details??'',emoji:r.emoji??''})); }
+/* =========================
+   STORAGE
+========================= */
 function saveCache(d){ localStorage.setItem(CACHE_KEY, JSON.stringify(d)); }
 function loadCache(){ try{ return JSON.parse(localStorage.getItem(CACHE_KEY)||'[]'); }catch{ return []; } }
 
-/* ================= RENDER ================= */
-function renderHeader(){ $('#currentMonthLabel').text(ymLabel(STATE.cursor)); $('#dashConn').text($('#connStatus').text()); }
-function eventsOnDate(d){ return STATE.events.filter(ev=>eventDays(ev).some(x=>sameDate(x,d))); }
-function monthEvents(y,m){ return STATE.events.filter(ev=>{
-  const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
-  if(d) return d.getFullYear()==y && d.getMonth()==m;
-  if(s&&e){ const ms=new Date(y,m,1), me=new Date(y,m+1,0); return e>=ms && s<=me; }
-  if(s) return s.getFullYear()==y && s.getMonth()==m;
-  return false;
-}).sort((a,b)=> (parseAny(a.date)||parseAny(a.startDate))- (parseAny(b.date)||parseAny(b.startDate))); }
+/* =========================
+   RENDER
+========================= */
+function refreshHeader(){
+  $('#currentMonthLabel').text(buddhistLabel(STATE.cursor));
+  $('#connStatus').text($('#statConn').text());
+}
+function countStats(){
+  const y=STATE.cursor.getFullYear(), m=STATE.cursor.getMonth();
+  const monthEvents = STATE.events.filter(ev=>{
+    const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
+    if(d) return d.getFullYear()==y && d.getMonth()==m;
+    if(s&&e){ const ms=new Date(y,m,1), me=new Date(y,m+1,0); return e>=ms && s<=me; }
+    if(s) return s.getFullYear()==y && s.getMonth()==m;
+    return false;
+  });
+  const todayCount = STATE.events.filter(ev => eventDays(ev).some(x=>sameDate(x,STATE.today))).length;
 
+  $('#countAll,#statAll').text(STATE.events.length);
+  $('#countMonth,#statMonth').text(monthEvents.length);
+  $('#countToday').text(todayCount);
+}
 function chipHtml(ev){
   const title = (ev.title && ev.title.toString().trim()) ? ev.title : 'ไม่ระบุชื่อกิจกรรม';
   const kind = ev.date ? 'allDay' : (ev.startDate && ev.endDate ? 'range' : 'allDay');
-  
-  // เวลา (ใช้ startTime + endTime)
-  let time = '';
-  if(ev.startTime && ev.endTime){
-    time = `${ev.startTime} - ${ev.endTime}`;
-  } else if(ev.startTime){
-    time = ev.startTime;
-  } else {
-    time = 'ทั้งวัน';
-  }
-
+  const time = timeLabel(ev);
   return `
     <div class="chip ${kind}" onclick="openDetail('${ev.id}')">
       <span>${ev.emoji || '📌'} ${escapeHtml(title)}</span>
-      <span class="opacity-70">• ${time}</span>
+      <span class="opacity-70">• ${escapeHtml(time)}</span>
     </div>
   `;
 }
-
-function renderMonthGrid(){
-  const y=STATE.cursor.getFullYear(), m=STATE.cursor.getMonth();
-  const first=new Date(y,m,1), start=first.getDay(), last=new Date(y,m+1,0).getDate();
-  const frag=[];
-  for(let i=0;i<start;i++) frag.push(`<div class="day muted"></div>`);
-  for(let d=1; d<=last; d++){
-    const dt = new Date(y,m,d);
-    const evs = eventsOnDate(dt);
-    const chips = evs.map(chipHtml).join('');
-    const today = sameDate(dt, STATE.today) ? <span class="today-badge">วันนี้</span> : '';
-    const wk = dt.getDay()==0?'sun': (dt.getDay()==6?'sat':'');
-    frag.push(`<div class="day ${wk}" data-iso="${dt.toISOString()}" onclick="openDayModal('${dt.toISOString()}')">
-      ${today}<div class="num">${d}</div>
-      <div class="mt-6">${chips || `<div class="text-xs text-slate-400">ไม่มีรายการ</div>`}</div>
-    </div>`);
-  }
-  while(frag.length%7!==0) frag.push(`<div class="day muted"></div>`);
-  $('#monthGrid').html(frag.join(''));
-
-  const arr = monthEvents(y,m);
-  $('#monthList').html(arr.map(listItem).join('') || `<div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>`);
-}
-
-function listItem(ev){
-  const start = parseAny(ev.date)||parseAny(ev.startDate)||new Date();
-  const d = ('0'+start.getDate()).slice(-2);
-  const m = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][start.getMonth()];
-  const y = (start.getFullYear()+543).toString().slice(-4);
-  return `<div class="card p-3 list-card">
-    <div class="list-date">
-      <div class="d">${d}</div>
-      <div class="text-xs text-slate-500">${m} ${y}</div>
-    </div>
-    <div>
-      <div class="flex items-center gap-2 text-sky-700"><span class="text-xl">${ev.emoji||'📌'}</span><b>${escapeHtml(ev.title)}</b></div>
-      <div class="text-xs text-slate-600 mt-1">วันที่: ${rangeLabel(ev)} • เวลา: ${timeLabel(ev)}</div>
-      <div class="text-xs text-slate-600">${ev.location?`สถานที่: ${escapeHtml(ev.location)} • `:''}${ev.owner?`ผู้รับผิดชอบ: ${escapeHtml(ev.owner)}`:''}</div>
-    </div>
-    <div><button class="btn" onclick="openDetail('${ev.id}')">ดูรายละเอียด</button></div>
-  </div>`;
-}
-
-function renderListView(){
-  $('#filterMonth').html(thMonths.map((t,i)=>`<option value="${i}">${t}</option>`).join(''));
-  const years=[...new Set(STATE.events.flatMap(ev=>eventDays(ev).map(d=>d.getFullYear()+543)))].sort((a,b)=>a-b);
-  $('#filterYear').html(years.map(y=>`<option>${y}</option>`).join(''));
-  applyListFilter();
-}
-function applyListFilter(){
-  const q=($('#searchInput').val()||'').toLowerCase();
-  const m=+$('#filterMonth').val(), y=+$('#filterYear').val()-543;
-  let data=[...STATE.events];
-  if(q) data=data.filter(ev=>[ev.title,ev.details,ev.location,ev.owner].join(' ').toLowerCase().includes(q));
-  data=data.filter(ev=>{
-    const ds=eventDays(ev); return ds.some(d=>(isNaN(m)?true:d.getMonth()==m) && (isNaN(y)?true:d.getFullYear()==y));
-  });
-  $('#listContainer').html(data.map(listItem).join('')||`<div class="card p-4 text-slate-500">ไม่พบรายการ</div>`);
-}
-function renderYearView(){
-  const y=STATE.cursor.getFullYear(), box=[];
-  for(let m=0;m<12;m++){
-    const h=`<div class="font-semibold mb-2">${thMonths[m]} ${y+543}</div>`;
-    const first=new Date(y,m,1), last=new Date(y,m+1,0), start=first.getDay();
-    let cells=[]; for(let i=0;i<start;i++) cells.push(`<div class="card p-1 opacity-30"></div>`);
-    for(let d=1; d<=last.getDate(); d++){ const dd=new Date(y,m,d); const has=eventsOnDate(dd).length>0; cells.push(`<div class="card p-1 text-center text-xs ${has?'bg-sky-50':''}">${d}</div>`); }
-    box.push(`<div class="card p-3">${h}<div class="grid grid-cols-7 gap-1 text-center text-xs text-slate-500 mb-1"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div><div class="grid grid-cols-7 gap-1">${cells.join('')}</div></div>`);
-  }
-  $('#yearGrid').html(box.join(''));
-}
-function refreshDash(){
-  $('#countAll,#dashAll').text(STATE.events.length);
-  const y=STATE.cursor.getFullYear(), m=STATE.cursor.getMonth();
-  const month = monthEvents(y,m).length; $('#countMonth,#dashMonth').text(month);
-  $('#countToday').text(eventsOnDate(STATE.today).length);
-  $('#barAll').css('width', Math.min(100, STATE.events.length*5)+'%');
-  $('#barMonth').css('width', Math.min(100, month*10)+'%');
-}
-
-/* ================= MODALS / ACTIONS ================= */
-function openDayModal(iso){
-  const d=new Date(iso); const evs=eventsOnDate(d);
-  $('#modalDayTitle').text(`งานวันที่ ${thLabel(d)}`);
-  $('#modalDayList').html(evs.map(e=>`
-    <div class="card p-3 flex items-start justify-between gap-2">
-      <div>
-        <div class="flex items-center gap-2 text-sky-700"><span class="text-xl">${e.emoji||'📌'}</span><b>${escapeHtml(e.title)}</b></div>
-        <div class="text-xs text-slate-600 mt-1">เวลา: ${timeLabel(e)} ${e.location?`• ${escapeHtml(e.location)}`:''}</div>
-      </div>
-      <button class="btn" onclick="openDetail('${e.id}')">ดูรายละเอียด</button>
-    </div>`).join('') || `<div class="text-slate-500">ไม่มีรายการ</div>`);
-  $('#modal-day').addClass('show');
-}
-function closeDayModal(){ $('#modal-day').removeClass('show'); }
 function openDetail(id){
-  const e=STATE.events.find(x=>x.id===id); if(!e) return;
-  $('#detailEmoji').text(e.emoji||'📌'); $('#detailTitle').text(e.title);
+  const e = STATE.events.find(x=>x.id==id);
+  if(!e) return;
+  $('#detailTitle').text${e.emoji||'📌'} ${e.title||'รายละเอียดงาน'}`);
+  const range = (()=>{ 
+    const d=parseAny(e.date), s=parseAny(e.startDate), ed=parseAny(e.endDate);
+    const thM=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+    const f=d=>`${d.getDate()} ${thM[d.getMonth()]} ${d.getFullYear()+543}`;
+    if(d) return f(d);
+    if(s&&ed) return ${f(s)} – ${f(ed)};
+    if(s) return f(s);
+    return '';
+  })();
+
   $('#detailBody').html(`
-    <div>📅 ${rangeLabel(e)} ${timeLabel(e)!=='ทั้งวัน'?`• ${timeLabel(e)}`:''}</div>
-    ${e.location?`<div>📍 ${escapeHtml(e.location)}</div>`:''}
-    ${e.owner?`<div>👤 ${escapeHtml(e.owner)}</div>`:''}
-    ${e.details?`<div class="text-slate-600 mt-2">${escapeHtml(e.details)}</div>`:''}
+    <div class="space-y-1">
+      <div><b>วันเวลา:</b> ${range} • ${timeLabel(e)}</div>
+      ${e.location?`<div><b>สถานที่:</b> ${escapeHtml(e.location)}</div>`:''}
+      ${e.owner?`<div><b>ผู้รับผิดชอบ:</b> ${escapeHtml(e.owner)}</div>`:''}
+      ${e.details?`<div class="mt-2 whitespace-pre-wrap"><b>รายละเอียด:</b><br>${escapeHtml(e.details)}</div>`:''}
+      <div class="text-xs text-slate-400">ID: ${e.id||'-'}</div>
+    </div>
   `);
   $('#modal-detail').addClass('show');
 }
-
-/* ================= ADMIN (ย่อ) ================= */
-$('#btnAdmin').on('click', async ()=>{
-  if(!STATE.admin){
-    const r=await Swal.fire({title:'รหัสผ่านแอดมิน',input:'password',showCancelButton:true,confirmButtonText:'ยืนยัน'});
-    if(!r.isConfirmed) return;
-    if(r.value!==ADMIN_PASSWORD) return Swal.fire('ผิดพลาด','รหัสผ่านไม่ถูกต้อง','error');
-    STATE.admin=true; confetti({particleCount:80,spread:60});
+function openDayModal(iso){
+  const d=new Date(iso);
+  const thMonths=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  $('#modalDayTitle').text(งานวันที่ ${d.getDate()} ${thMonths[d.getMonth()]} ${d.getFullYear()+543});
+  const evs = STATE.events.filter(ev=>eventDays(ev).some(x=>sameDate(x,d)));
+  $('#modalDayList').html( evs.map(e=>`
+    <div class="card p-3 flex items-start justify-between gap-2">
+      <div>
+        <div class="flex items-center gap-2 text-sky-700">
+          <span class="text-xl">${e.emoji||'📌'}</span>
+          <b>${escapeHtml(e.title||'ไม่ระบุชื่อกิจกรรม')}</b>
+        </div>
+        <div class="text-xs text-slate-600 mt-1">เวลา: ${escapeHtml(timeLabel(e))} ${e.location?`• ${escapeHtml(e.location)}`:''}</div>
+      </div>
+      <button class="btn" onclick="openDetail('${e.id}')">ดูรายละเอียด</button>
+    </div>
+  ).join('') || `<div class="text-slate-500">ไม่มีรายการ</div>);
+  $('#modal-day').addClass('show');
+}
+function renderMonthGrid(){
+  const y=STATE.cursor.getFullYear(), m=STATE.cursor.getMonth();
+  $('#currentMonthLabel').text(buddhistLabel(STATE.cursor));
+  const first=new Date(y,m,1), start=first.getDay(), last=new Date(y,m+1,0).getDate();
+  const frag=[];
+  for(let i=0;i<start;i++) frag.push(<div class="day muted"></div>);
+  for(let d=1; d<=last; d++){
+    const dt = new Date(y,m,d);
+    const evs = STATE.events
+      .filter(ev=>{
+        if(STATE.filterOwner && ev.owner!==STATE.filterOwner) return false;
+        if(STATE.filterLocation && ev.location!==STATE.filterLocation) return false;
+        return eventDays(ev).some(x=>sameDate(x,dt));
+      });
+    const chips = evs.map(chipHtml).join('');
+    const badge = sameDate(dt, STATE.today) ? <span class="today-badge">วันนี้</span> : '';
+    const wk = dt.getDay()==0?'sun': (dt.getDay()==6?'sat':'');
+    frag.push(`
+      <div class="day ${wk}" onclick="openDayModal('${dt.toISOString()}')">
+        ${badge}
+        <div class="num">${d}</div>
+        <div class="mt-6">${ chips || <div class="text-xs text-slate-400">ไม่มีรายการ</div> }</div>
+      </div>
+    `);
   }
-  $('#modal-admin').addClass('show');
-});
-$('input[name="mode"]').on('change',function(){ const m=this.value; $('#wrap-single').toggleClass('hidden',m!=='single'); $('#wrap-range').toggleClass('hidden',m!=='range'); });
-function fillAdminStatic(){
-  $('#f-emoji').html(`<option value="">(ไม่มี)</option>`+EMOJI_CHOICES.map(e=>`<option>${e}</option>`).join(''));
-  $('#f-location').html(LOCATIONS.map(s=>`<option>${s}</option>`).join(''));
-  $('#f-owner').html(OWNERS.map(s=>`<option>${s}</option>`).join(''));
-}
-function collectForm(){
-  const m=$('input[name="mode"]:checked').val();
-  const p={id:STATE.editing||('ev_'+Date.now()),title:$('#f-title').val(),emoji:$('#f-emoji').val(),startTime:$('#f-startTime').val(),endTime:$('#f-endTime').val(),location:$('#f-location').val(),owner:$('#f-owner').val(),details:$('#f-details').val(),date:'',startDate:'',endDate:''};
-  if(m==='single') p.date=$('#f-date').val(); else{ p.startDate=$('#f-startDate').val(); p.endDate=$('#f-endDate').val(); }
-  return p;
-}
-function reloadEditSelect(){ $('#editSelect').html(STATE.events.map(e=>`<option value="${e.id}">${escapeHtml(e.title)}</option>`).join('')); }
-$('#btnCreate').on('click', async ()=>{
-  const payload=collectForm(); await saveToServer('add',payload);
-});
-$('#btnUpdate').on('click', async ()=>{
-  const id=$('#editSelect').val(); if(!id) return;
-  STATE.editing=id; const payload=collectForm(); payload.id=id; await saveToServer('edit',payload);
-});
-$('#btnDelete').on('click', async ()=>{
-  const id=$('#editSelect').val(); if(!id) return;
-  const ok=await Swal.fire({title:'ยืนยัน',text:'ลบรายการนี้?',icon:'warning',showCancelButton:true});
-  if(ok.isConfirmed) await saveToServer('delete',{id});
-});
-async function saveToServer(mode,payload){
-  try{
-    $('#loading').addClass('show');
-    const js=await postToGAS(mode,payload);
-    if(js.status==='ok'){ confetti({particleCount:120,spread:70}); await syncNow(); $('#modal-admin').removeClass('show'); }
-    else Swal.fire('ผิดพลาด',js.message||'ไม่สามารถบันทึกได้','error');
-  }finally{ $('#loading').removeClass('show'); }
-}
+  while(frag.length%7!==0) frag.push(<div class="day muted"></div>);
+  $('#monthGrid').html(frag.join(''));
 
-/* ================= SYNC / INIT ================= */
-async function syncNow(){
-  try{
-    $('#loading').addClass('show');
-    const data=await fetchFromGAS();
-    if(Array.isArray(data)){
-      $('#connStatus').text('ออนไลน์').removeClass('text-red-500').addClass('text-green-600');
-      STATE.events=normalize(data); saveCache(STATE.events);
-      Swal.fire({icon:'success',title:'ซิงก์แล้ว',timer:1200,showConfirmButton:false});
-    }else{
-      $('#connStatus').text('ออฟไลน์'); STATE.events=loadCache();
-      Swal.fire('โหมดออฟไลน์','ใช้ข้อมูลจากเครื่องชั่วคราว','info');
+  // ลิสต์ด้านล่าง
+  const monthData = STATE.events.filter(ev=>{
+    const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
+    if(d) return d.getFullYear()==y && d.getMonth()==m;
+    if(s&&e){ const ms=new Date(y,m,1), me=new Date(y,m+1,0); return e>=ms && s<=me; }
+    if(s) return s.getFullYear()==y && s.getMonth()==m;
+    return false;
+  }).sort((a,b)=> (parseAny(a.date)||parseAny(a.startDate)) - (parseAny(b.date)||parseAny(b.startDate)));
+  const thMShort=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  $('#monthList').html(monthData.map(ev=>{
+    const start = parseAny(ev.date)||parseAny(ev.startDate)||new Date();
+    const d = ('0'+start.getDate()).slice(-2);
+    const mmm = thMShort[start.getMonth()];
+    const yy = start.getFullYear()+543;
+    return `
+      <div class="card p-3 grid grid-cols-8 sm:grid-cols-12 gap-3 items-center">
+        <div class="col-span-2 sm:col-span-1 text-center">
+          <div class="text-lg font-extrabold">${d}</div>
+          <div class="text-xs text-slate-500">${mmm} ${yy}</div>
+        </div>
+        <div class="col-span-6 sm:col-span-9">
+          <div class="flex items-center gap-2 text-sky-700">
+            <span class="text-xl">${ev.emoji||'📌'}</span>
+            <b>${escapeHtml(ev.title||'ไม่ระบุชื่อกิจกรรม')}</b>
+          </div>
+          <div class="text-xs text-slate-600 mt-1">
+            วันที่: ${escapeHtml((()=>{const d=parseAny(ev.date),s=parseAny(ev.startDate),e=parseAny(ev.endDate);const f=x=>`${x.getDate()} ${thMShort[x.getMonth()]} ${x.getFullYear()+543}`; if(d) return f(d); if(s&&e) return f(s)+' – '+f(e); if(s) return f(s); return ''})())}
+            • เวลา: ${escapeHtml(timeLabel(ev))}
+            ${ev.location?`• สถานที่: ${escapeHtml(ev.location)}`:''}
+            ${ev.owner?`• ผู้รับผิดชอบ: ${escapeHtml(ev.owner)}`:''}
+          </div>
+        </div>
+        <div class="col-span-0 sm:col-span-2 justify-self-end">
+          <button class="btn" onclick="openDetail('${ev.id}')">ดูรายละเอียด</button>
+        </div>
+      </div>
+    `;
+  }).join('') || <div class="text-slate-500">ไม่พบรายการในเดือนนี้</div>);
+}
+function renderListView(){
+  const q = ($('#searchBox').val()||'').toLowerCase();
+  const monthIso = $('#listMonth').val();
+  const y = STATE.cursor.getFullYear(), m = STATE.cursor.getMonth();
+  const inMonth = (ev)=>{
+    const d=parseAny(ev.date), s=parseAny(ev.startDate), e=parseAny(ev.endDate);
+    const yy = monthIso ? Number(monthIso.split('-')[0]) : y;
+    const mm = monthIso ? Number(monthIso.split('-')[1])-1 : m;
+    if(d) return d.getFullYear()==yy && d.getMonth()==mm;
+    if(s&&e){ const ms=new Date(yy,mm,1), me=new Date(yy,mm+1,0); return e>=ms && s<=me; }
+    if(s) return s.getFullYear()==yy && s.getMonth()==mm;
+    return false;
+  };
+  const list = STATE.events.filter(ev=>{
+    if(!inMonth(ev)) return false;
+    if(STATE.filterOwner && ev.owner!==STATE.filterOwner) return false;
+    if(STATE.filterLocation && ev.location!==STATE.filterLocation) return false;
+    const blob = ${ev.title} ${ev.location} ${ev.owner} ${ev.details}.toLowerCase();
+    return blob.includes(q);
+  }).sort((a,b)=> (parseAny(a.date)||parseAny(a.startDate)) - (parseAny(b.date)||parseAny(b.startDate)));
+
+  const thMShort=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  $('#listContainer').html(list.map(ev=>{
+    const start = parseAny(ev.date)||parseAny(ev.startDate)||new Date();
+    const d = ('0'+start.getDate()).slice(-2);
+    const mmm = thMShort[start.getMonth()];
+    const yy = start.getFullYear()+543;
+    return `
+      <div class="card p-3 flex items-start justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-12 text-center">
+            <div class="text-lg font-extrabold">${d}</div>
+            <div class="text-xs text-slate-500">${mmm}<br>${yy}</div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 text-sky-700">
+              <span class="text-xl">${ev.emoji||'📌'}</span>
+              <b>${escapeHtml(ev.title||'ไม่ระบุชื่อกิจกรรม')}</b>
+            </div>
+            <div class="text-xs text-slate-600 mt-1">
+              เวลา: ${escapeHtml(timeLabel(ev))}
+              ${ev.location?`• สถานที่: ${escapeHtml(ev.location)}`:''}
+              ${ev.owner?`• ผู้รับผิดชอบ: ${escapeHtml(ev.owner)}`:''}
+            </div>
+          </div>
+        </div>
+        <button class="btn" onclick="openDetail('${ev.id}')">ดูรายละเอียด</button>
+      </div>
+    `;
+  }).join('') || <div class="text-slate-500">ไม่พบรายการ</div>);
+}
+function renderYearView(){
+  const y = STATE.cursor.getFullYear();
+  const months = Array.from({length:12}, (_,i)=>new Date(y,i,1));
+  const thM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const boxes = months.map(d=>{
+    const m=d.getMonth();
+    const start=d.getDay(), last=new Date(y,m+1,0).getDate();
+    let cells='';
+    for(let i=0;i<start;i++) cells+=`<div class="text-slate-300">·</div>`;
+    for(let day=1; day<=last; day++){
+      const has = STATE.events.some(ev=>eventDays(ev).some(x=>x.getFullYear()==y && x.getMonth()==m && x.getDate()==day));
+      cells += <div class="${has?'text-sky-600 font-bold':'text-slate-600'}">${day}</div>;
     }
-  }catch(e){
-    $('#connStatus').text('ออฟไลน์'); STATE.events=loadCache();
-  }finally{
-    renderAll(); $('#loading').removeClass('show');
+    return `
+      <div class="card p-3">
+        <div class="font-bold text-slate-700 mb-2">${thM[m]} ${y+543}</div>
+        <div class="grid grid-cols-7 gap-1 text-[12px]">${cells}</div>
+      </div>
+    `;
+  }).join('');
+  $('#yearContainer').html(boxes);
+}
+
+/* =========================
+   DATA
+========================= */
+async function syncFromGAS(){
+  $('#connStatus,#statConn').text('กำลังซิงก์…');
+  try{
+    const res = await fetch(GAS_ENDPOINT, {cache:'no-store'});
+    const json = await res.json();
+    if(json.status==='ok' && Array.isArray(json.data)){
+      // กรองตาม dropdown เริ่มต้น
+      STATE.events = json.data.map(x=>({
+        id: x.id || ('ev_'+Date.now()),
+        title: x.title || '',
+        date: x.date || '',
+        startDate: x.startDate || '',
+        endDate: x.endDate || '',
+        startTime: x.startTime || '',
+        endTime: x.endTime || '',
+        location: x.location || '',
+        owner: x.owner || '',
+        details: x.details || '',
+        emoji: x.emoji || ''
+      }));
+      saveCache(STATE.events);
+      $('#connStatus,#statConn').text('ออนไลน์');
+      confetti({particleCount:120, spread:70, origin:{y:0.2}});
+      renderAll();
+    }else{
+      throw new Error('รูปแบบข้อมูลไม่ถูกต้อง');
+    }
+  }catch(err){
+    $('#connStatus,#statConn').text('ออฟไลน์');
+    Swal.fire('โหมดออฟไลน์','ใช้ข้อมูลจากเครื่องชั่วคราว','info');
+    STATE.events = loadCache();
+    renderAll();
   }
 }
+
+/* =========================
+   UI actions
+========================= */
 function renderAll(){
-  renderHeader(); renderMonthGrid(); renderListView(); renderYearView(); refreshDash();
-  $('#quickOwner').html(`<option value="">ทั้งหมด</option>`+[...new Set(STATE.events.map(e=>e.owner).filter(Boolean))].map(x=>`<option>${escapeHtml(x)}</option>`).join(''));
-  $('#quickLocation').html(`<option value="">ทุกสถานที่</option>`+[...new Set(STATE.events.map(e=>e.location).filter(Boolean))].map(x=>`<option>${escapeHtml(x)}</option>`).join(''));
-  reloadEditSelect();
+  // เติมตัวกรอง (ครั้งแรก)
+  const owners = [...new Set(STATE.events.map(e=>e.owner).filter(Boolean))];
+  const locs   = [...new Set(STATE.events.map(e=>e.location).filter(Boolean))];
+  $('#quickOwner').html(<option value="">ทุกฝ่ายงาน</option> + owners.map(o=>`<option>${escapeHtml(o)}</option>`).join(''));
+  $('#quickLocation').html(<option value="">ทุกสถานที่</option> + locs.map(o=>`<option>${escapeHtml(o)}</option>`).join(''));
+  // month list dropdown
+  const months = Array.from({length:13}, (_,i)=>{const d=new Date(); d.setMonth(d.getMonth()+i-6); return d;});
+  $('#listMonth').html(months.map(d=>`<option value="${d.getFullYear()}-${('0'+(d.getMonth()+1)).slice(-2)}">${buddhistLabel(d)}</option>`).join(''));
+
+  refreshHeader();
+  countStats();
+
+  if(STATE.view==='month'){ $('#viewMonth').show(); $('#viewList,#viewYear').hide(); renderMonthGrid(); }
+  if(STATE.view==='list'){  $('#viewList').show();  $('#viewMonth,#viewYear').hide(); renderListView(); }
+  if(STATE.view==='year'){  $('#viewYear').show();  $('#viewMonth,#viewList').hide(); renderYearView(); }
 }
 
-/* ================= BINDINGS ================= */
-$('#btnPrev').on('click',()=>{ STATE.cursor.setMonth(STATE.cursor.getMonth()-1); renderAll(); });
-$('#btnNext').on('click',()=>{ STATE.cursor.setMonth(STATE.cursor.getMonth()+1); renderAll(); });
-$('#btnToday').on('click',()=>{ STATE.cursor=new Date(); renderAll(); });
-$('#btnSync').on('click', syncNow);
-$('#btnViewMonth').on('click',()=>{$('#view-month').show();$('#view-list,#view-year').hide();});
-$('#btnViewList').on('click',()=>{$('#view-list').show();$('#view-month,#view-year').hide();});
-$('#btnViewYear').on('click',()=>{$('#view-year').show();$('#view-month,#view-list').hide();});
-$('#btnToggleList').on('click',()=>$('#monthList').toggle());
-$('#searchInput,#filterMonth,#filterYear,#quickOwner,#quickLocation').on('input change',applyListFilter);
+$(function(){
+  // ปุ่มมุมมอง
+  $('#btnViewMonth').on('click',()=>{ STATE.view='month'; renderAll(); });
+  $('#btnViewList').on('click', ()=>{ STATE.view='list';  renderAll(); });
+  $('#btnViewYear').on('click', ()=>{ STATE.view='year';  renderAll(); });
 
-fillAdminStatic();
+  // เลื่อนเดือน
+  $('#btnPrev').on('click',()=>{ STATE.cursor.setMonth(STATE.cursor.getMonth()-1); renderAll(); });
+  $('#btnNext').on('click',()=>{ STATE.cursor.setMonth(STATE.cursor.getMonth()+1); renderAll(); });
+  $('#btnToday').on('click',()=>{ STATE.cursor = new Date(); renderAll(); });
 
-/* ================= START ================= */
-(async function init(){
-  STATE.events=loadCache(); renderAll();
-  await syncNow();
-})();
+  // ซิงก์
+  $('#btnSync').on('click',()=> syncFromGAS());
+
+  // ตัวกรอง
+  $('#quickOwner').on('change', function(){ STATE.filterOwner = this.value; renderAll(); });
+  $('#quickLocation').on('change', function(){ STATE.filterLocation = this.value; renderAll(); });
+  $('#searchBox').on('input', ()=> renderListView());
+  $('#listMonth').on('change', ()=> renderListView());
+
+  // แอดมิน (ล็อกเฉย ๆ ไว้ก่อน)
+  $('#btnAdmin').on('click', async ()=>{
+    const {value: pw} = await Swal.fire({title:'เข้าสู่ระบบแอดมิน', input:'password', inputPlaceholder:'รหัสผ่าน', confirmButtonText:'เข้าสู่ระบบ', showCancelButton:true});
+    if(pw===ADMIN_PASSWORD){
+      Swal.fire('สำเร็จ','เข้าสู่โหมดแอดมิน (ตัวอย่างนี้ยังไม่เปิด CRUD แต่เชื่อมพร้อมแล้ว)','success');
+    }else if(pw!==undefined){
+      Swal.fire('ผิดพลาด','รหัสผ่านไม่ถูกต้อง','error');
+    }
+  });
+
+  // โหลดข้อมูลจากแคชก่อน แล้วกดซิงก์
+  STATE.events = loadCache();
+  renderAll();
+  syncFromGAS();
+});
 </script>
 </body>
 </html>
