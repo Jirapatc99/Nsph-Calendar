@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body { font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #93c5fd, #e0f2fe); }
+    .card { background: #fff; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .btn { padding: .4rem .8rem; border-radius: 12px; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+    .btn:hover { background: #f1f5f9; }
+    .btn-primary { background: linear-gradient(135deg,#38bdf8,#3b82f6); color: #fff; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- HEADER -->
+  <header class="max-w-5xl mx-auto px-4 pt-6">
+    <div class="card p-5 flex flex-col sm:flex-row justify-between gap-4">
+      <div class="flex gap-3 items-center">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Emblem_of_the_Ministry_of_Education_of_Thailand.svg" class="w-12 h-12">
+        <div>
+          <h1 class="text-xl font-semibold">ระบบปฏิทินงานวิชาการ โรงเรียนโนนศิลาพิทยาคม</h1>
+          <p class="text-sm text-gray-600">เชื่อม Google Sheets • รองรับ พ.ศ.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 flex-wrap items-center">
+        <span>สถานะ: <b id="connStatus" class="text-red-500">ออฟไลน์</b></span>
+        <span>งานทั้งหมด: <b id="countAll">0</b></span>
+        <span>เดือนนี้: <b id="countMonth">0</b></span>
+        <span>วันนี้: <b id="countToday">0</b></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTROL BAR -->
+  <div class="max-w-5xl mx-auto mt-6 px-4">
+    <div class="card p-3 flex flex-wrap justify-between items-center gap-2">
+      <div class="flex gap-2">
+        <button id="btnViewMonth" class="btn">เดือน</button>
+        <button id="btnViewList" class="btn">รายการ</button>
+        <button id="btnViewYear" class="btn">รายปี</button>
+      </div>
+      <div class="flex gap-2 items-center">
+        <button id="btnPrev" class="btn">‹</button>
+        <div id="currentMonthLabel" class="font-semibold">–</div>
+        <button id="btnNext" class="btn">›</button>
+        <button id="btnToday" class="btn">วันนี้</button>
+      </div>
+      <div class="flex gap-2">
+        <button id="btnSync" class="btn">ซิงก์</button>
+        <button id="btnAdmin" class="btn btn-primary">แอดมิน</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="max-w-5xl mx-auto mt-6 px-4">
+    <section id="view-month" class="card p-4"> 
+      <h2 class="font-semibold mb-2">มุมมองเดือน</h2>
+      <div id="monthGrid" class="grid grid-cols-7 gap-2"></div>
+    </section>
+
+    <section id="view-list" class="card p-4 hidden">
+      <h2 class="font-semibold mb-2">มุมมองรายการ</h2>
+      <div id="listContainer">ยังไม่มีข้อมูล</div>
+    </section>
+
+    <section id="view-year" class="card p-4 hidden">
+      <h2 class="font-semibold mb-2">มุมมองรายปี</h2>
+      <div id="yearGrid" class="grid grid-cols-3 gap-2 text-center"></div>
+    </section>
+  </main>
+
+<script>
+const GAS_ENDPOINT = "https://script.google.com/a/macros/nonsilapittayakhom.ac.th/s/AKfycbznIN6wc2z9tIkxl5qsXNRhqEfa787zfK5ej2leJZ1rrYfWYEka-14raHTVAXiHWC8O/exec";
+const ADMIN_PASSWORD = "adminvichakarn";
+
+const STATE = { cursor: new Date(), events: [] };
+
+function thMonth(m){return ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"][m];}
+function yymmLabel(d){return thMonth(d.getMonth())+" "+(d.getFullYear()+543);}
+
+async function fetchFromGAS(){
+  try{let res=await fetch(GAS_ENDPOINT);let js=await res.json();return js.data||[]}catch(e){return []}
+}
+async function synchronizeNow(){
+  let data=await fetchFromGAS();
+  if(data.length){
+    STATE.events=data;
+    $("#connStatus").text("ออนไลน์").removeClass("text-red-500").addClass("text-green-600");
+    $("#countAll").text(data.length);
+    renderAll();
+    Swal.fire("สำเร็จ","ซิงก์ข้อมูลแล้ว","success");
+  }else{
+    Swal.fire("ผิดพลาด","โหลดข้อมูลไม่สำเร็จ","error");
+  }
+}
+
+function renderAll(){
+  $("#currentMonthLabel").text(yymmLabel(STATE.cursor));
+  renderMonth();
+}
+function renderMonth(){
+  let y=STATE.cursor.getFullYear(),m=STATE.cursor.getMonth();
+  let days=new Date(y,m+1,0).getDate();
+  let html="";
+  for(let d=1;d<=days;d++){ html+=`<div class="border rounded p-2 text-sm">${d}</div>` }
+  $("#monthGrid").html(html);
+}
+
+$("#btnSync").on("click",synchronizeNow);
+$("#btnPrev").on("click",()=>{STATE.cursor.setMonth(STATE.cursor.getMonth()-1);renderAll()});
+$("#btnNext").on("click",()=>{STATE.cursor.setMonth(STATE.cursor.getMonth()+1);renderAll()});
+$("#btnToday").on("click",()=>{STATE.cursor=new Date();renderAll()});
+$("#btnViewMonth").on("click",()=>{$("#view-month").show();$("#view-list,#view-year").hide();});
+$("#btnViewList").on("click",()=>{$("#view-list").show();$("#view-month,#view-year").hide();});
+$("#btnViewYear").on("click",()=>{$("#view-year").show();$("#view-month,#view-list").hide();});
+
+renderAll();
+</script>
+</body>
+</html>
