@@ -57,14 +57,7 @@
   @media (min-width:1024px){
     .hero-left{gap:1rem}
     .hero-logo{width:72px;height:72px;border-radius:20px}
-    .chip div:first-child {
-  font-weight: 500;
-}
-
-.chip div.opacity-70 {
-  font-size: 0.85em;
-  color: #555;
-}
+    
 </style>
 </head>
 <body class="bg-grad text-slate-800">
@@ -164,7 +157,7 @@
   <div class="modal-card">
     <div class="flex items-start justify-between">
       <div>
-        <h3 id="modalDayTitle" class="text-lg font-semibold">เหตุการณ์ของวันที่ …</h3>
+        <h3 id="modalDayTitle" class="text-lg font-semibold">งานที่ …</h3>
         <p id="modalDaySub" class="text-slate-500 text-sm"></p>
       </div>
       <button class="btn" onclick="closeDayModal()">ปิด</button>
@@ -357,18 +350,6 @@ function dayRangeArray(ev){
   if(s && !e) return [s];
   return [];
 }
-function chipHtml(ev){
-  const kind = ev.date ? 'allDay' : (ev.startDate && ev.endDate ? 'range' : 'allDay');
-  const title = `${ev.emoji||''} ${escapeHtml(ev.title)}`;
-  const time = timeLabel(ev);
-
-  return `
-    <div class="chip ${kind}" onclick="openDetail('${ev.id}')">
-      <div>${title}</div>
-      <div class="opacity-70">${time}</div>
-    </div>
-  `;
-}
   
 /* ================= DATA LAYER ================= */
 async function fetchFromGAS(){
@@ -434,10 +415,12 @@ function dayCell(d){
   const chips = evs.map(e=>`<div class="chip" title="${escapeHtml(e.title)}"><span>${e.emoji||'🗓️'}</span><span>${timeLabel(e)}</span><span>${escapeHtml(e.title)}</span></div>`).join('');
   const today = isSameDate(d, STATE.today) ? `<span class="today-badge">วันนี้</span>` : '';
   return `<div class="${cellCls}" data-date="${d.toISOString().slice(0,10)}" onclick="openDayModal('${d.toISOString()}')">
-    ${today}
-    <div class="num">${d.getDate()}</div>
-    <div class="mt-6">${chips || `<div class="text-xs text-slate-400">ไม่มีรายการ</div>`}</div>
-  </div>`;
+  <div class="num">
+    ${d.getDate()} 
+    ${isSameDate(d, STATE.today) ? <span class="today-badge ml-1">วันนี้</span> : ''}
+  </div>
+  <div class="mt-6">${chips || `<div class="text-xs text-slate-400">ไม่มีรายการ</div>`}</div>
+</div>`;
 }
 
 function listItem(e){
