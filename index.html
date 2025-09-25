@@ -282,10 +282,25 @@ function monthEvents(y,m){ return STATE.events.filter(ev=>{
 }).sort((a,b)=> (parseAny(a.date)||parseAny(a.startDate))- (parseAny(b.date)||parseAny(b.startDate))); }
 
 function chipHtml(ev){
+  const title = (ev.title && ev.title.toString().trim()) ? ev.title : 'ไม่ระบุชื่อกิจกรรม';
   const kind = ev.date ? 'allDay' : (ev.startDate && ev.endDate ? 'range' : 'allDay');
-  const title = `${ev.emoji||'📌'} ${escapeHtml(ev.title)}`;
-  const time = timeLabel(ev);
-  return `<div class="chip ${kind}" onclick="openDetail('${ev.id}')"><span>${title}</span><span class="opacity-70">• ${time}</span></div>`;
+  
+  // เวลา (ใช้ startTime + endTime)
+  let time = '';
+  if(ev.startTime && ev.endTime){
+    time = `${ev.startTime} - ${ev.endTime}`;
+  } else if(ev.startTime){
+    time = ev.startTime;
+  } else {
+    time = 'ทั้งวัน';
+  }
+
+  return `
+    <div class="chip ${kind}" onclick="openDetail('${ev.id}')">
+      <span>${ev.emoji || '📌'} ${escapeHtml(title)}</span>
+      <span class="opacity-70">• ${time}</span>
+    </div>
+  `;
 }
 
 function renderMonthGrid(){
