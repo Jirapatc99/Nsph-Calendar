@@ -555,13 +555,17 @@ function openDayModal(iso){
   $('#modalDayTitle').text(`เหตุการณ์ของวันที่ ${toBuddhistYearStr(d)}`);
   $('#modalDaySub').text(`วัน${['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]}`);
   const evs = eventsOnDate(d);
-  $('#modalDayList').html(evs.map((e,i)=>`
-    <div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
-      <div class="flex items-center gap-2 text-sky-700"><span class="text-xl">${e.emoji||'🗓️'}</span><b>${escapeHtml(e.title)}</b></div>
-      <div class="text-sm text-slate-600 mt-1">${rangeLabel(e)} ${timeLabel(e)}</div>
-      <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
-    </div>`).join('') || `<div class="text-slate-500">ไม่มีรายการ</div>`);
-  $('#modal-day').addClass('show');
+  $('#modalDayList').html(evs.map((e,i)=>
+  `<div class="card p-3 cursor-pointer" onclick="openDetail('${e.id}')">
+    <div class="flex items-center gap-2 text-sky-700">
+      <span class="text-xl">${e.emoji||'🗓️'}</span>
+      <b>${escapeHtml(e.title)}</b>
+    </div>
+    <div class="text-sm text-slate-600 mt-1">${timeLabel(e)}</div>
+    <div class="text-sm text-slate-600">${rangeLabel(e)}</div>
+    <div class="text-sm text-slate-600">${escapeHtml(e.location||'')}</div>
+  </div>`
+).join('') || `<div class="text-slate-500">ไม่มีรายการ</div>`);
 }
 function closeDayModal(){ $('#modal-day').removeClass('show'); }
 function openDetail(id){
